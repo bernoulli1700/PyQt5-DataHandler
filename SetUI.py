@@ -43,8 +43,6 @@ class SetUI(QWidget):
       self.DataTreeView.setContextMenuPolicy(Qt.CustomContextMenu)
       self.DataTreeView.customContextMenuRequested.connect(self.showContextMenu)
 
-     
-
 
   def Plot(self):
         self.fig = plt.Figure()

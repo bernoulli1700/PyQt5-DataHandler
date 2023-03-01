@@ -32,9 +32,12 @@ class TreeViewEvent(QWidget):
             delete_action.triggered.connect(lambda: self.DeleteItemEvent(item))
             menu.addAction(delete_action)
         elif depth == 2:
-            plot_action = QAction('Plot', self)
-            plot_action.triggered.connect(lambda: self.TreeViewToPlotEvent(index))
-            menu.addAction(plot_action)   
+            Plot_action = QAction('Plot', self)
+            Edit_action = QAction('Edit', self)
+            Plot_action.triggered.connect(lambda: self.TreeViewToPlotEvent(index))
+            Edit_action.triggered.connect(lambda: self.TreeViewToEditEvent(index))
+            menu.addAction(Plot_action)   
+            menu.addAction(Edit_action)   
 
         menu.exec_(self.DataTreeView.viewport().mapToGlobal(pos))
     
@@ -59,8 +62,6 @@ class TreeViewEvent(QWidget):
 
 
 
-
-
 class PlotEvent(QWidget):
     def TreeViewToPlotEvent(self, index):
         item = index.model().itemFromIndex(index)
@@ -78,6 +79,36 @@ class PlotEvent(QWidget):
         for i in range(0,RowNum):
             for j in range(0,ColNum):
                 self.tableWidget.setItem(i, j,QTableWidgetItem(str(array[i,j])))
+
+    def TreeViewToEditEvent(self, index):
+        item = index.model().itemFromIndex(index)
+        array = item.data(item.UserRole)
+
+        #Update TableWidget
+        RowNum = len(array[:,0])
+        ColNum = len(array[0,:])
+        #self.tableWidget.setRowCount(RowNum)
+        #self.tableWidget.setColumnCount(ColNum)
+
+        PopUpTableWidget = QTableWidget()
+        PopUpTableWidget.setRowCount(RowNum)
+        PopUpTableWidget.setColumnCount(ColNum)
+
+        for row in range(0,RowNum):
+            for col in range(0,ColNum):
+                PopUpTableWidget.setItem(row,col,QTableWidgetItem(str(array[row,col])))
+        
+        dialog = QDialog(self)
+        dialog.setWindowTitle('Edit Window')
+        layout = QVBoxLayout()
+        layout.addWidget(PopUpTableWidget)
+        buttons = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        buttons.accepted.connect(dialog.accept)
+        buttons.rejected.connect(dialog.reject)
+        layout.addWidget(buttons)
+        dialog.setLayout(layout)
+        dialog.setModal(True)
+        dialog.show()
 
 
 
