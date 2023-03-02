@@ -3,6 +3,7 @@ import numpy as np
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import Qt, QModelIndex
 from DefDataType import *
+from CustomWidgets import *
 
 class TreeViewEvent(QWidget):
     def showContextMenu(self,pos):
@@ -90,7 +91,7 @@ class PlotEvent(QWidget):
         #self.tableWidget.setRowCount(RowNum)
         #self.tableWidget.setColumnCount(ColNum)
 
-        PopUpTableWidget = QTableWidget()
+        PopUpTableWidget = MyTableWidget()
         PopUpTableWidget.setRowCount(RowNum)
         PopUpTableWidget.setColumnCount(ColNum)
 
@@ -109,6 +110,16 @@ class PlotEvent(QWidget):
         dialog.setLayout(layout)
         dialog.setModal(True)
         dialog.show()
+
+        if dialog.exec_() == QDialog.Accepted:
+            newarray = np.zeros([RowNum,ColNum])
+            for n_row in range(0,RowNum):
+                for n_col in range(0,ColNum):
+                    newarray[n_row,n_col] = float(PopUpTableWidget.item(n_row,n_col).text())
+            
+            # Set the new edited values in the item
+            item.setData(newarray,item.UserRole)
+
 
 
 
