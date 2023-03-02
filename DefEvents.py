@@ -1,4 +1,3 @@
-import csv
 import numpy as np
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import QModelIndex

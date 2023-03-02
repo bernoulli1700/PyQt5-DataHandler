@@ -3,6 +3,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvas as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import matplotlib.pyplot as plt
 from DefDataType import *
+from PyQt5.QtGui import QStandardItemModel
 
 class SetUI(QWidget):
         
@@ -41,7 +42,6 @@ class SetUI(QWidget):
 
       self.DataTreeView.setContextMenuPolicy(Qt.CustomContextMenu)
       self.DataTreeView.customContextMenuRequested.connect(self.showContextMenu)
-
 
   def Plot(self):
         self.fig = plt.Figure()

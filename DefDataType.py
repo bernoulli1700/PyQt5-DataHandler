@@ -1,7 +1,6 @@
-import sys
 import numpy as np
 from PyQt5.QtCore import Qt
-from PyQt5.QtGui import QStandardItem, QStandardItemModel
+from PyQt5.QtGui import QStandardItem
 
 class FCycleArray(QStandardItem):
     UserRole = Qt.UserRole + 1

@@ -1,4 +1,4 @@
-from PyQt5.QtGui import QClipboard, QKeySequence
+from PyQt5.QtGui import QKeySequence
 from PyQt5.QtWidgets import QTableWidget, QTableWidgetItem, QApplication, QAbstractItemView
 
 class MyTableWidget(QTableWidget):
