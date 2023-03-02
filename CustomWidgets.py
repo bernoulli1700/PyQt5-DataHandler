@@ -13,6 +13,8 @@ class MyTableWidget(QTableWidget):
                 # Split the text into rows and columns
                 rows = text.split('\n')
                 rows.pop()
+                if not rows:
+                    return
                 cols = rows[0].split('\t')
                 RowNums = len(rows)
                 ColNums = len(cols)

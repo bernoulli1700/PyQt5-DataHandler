@@ -8,7 +8,6 @@ class MyApp(SetUI,DefEvents):
       super().InitDirTreeView()
       super().InitDataTreeView()
       super().Plot()
-      super().TableWidgetUI()
       super().ButtonUI()
       super().SetLayout()
 

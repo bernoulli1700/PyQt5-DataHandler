@@ -1,7 +1,7 @@
 import csv
 import numpy as np
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import Qt, QModelIndex
+from PyQt5.QtCore import QModelIndex
 from DefDataType import *
 from CustomWidgets import *
 
@@ -61,8 +61,6 @@ class TreeViewEvent(QWidget):
             self.DataTreeView.setCurrentIndex(QModelIndex())
             self.DataTreeView.reset()
 
-
-
 class PlotEvent(QWidget):
     def TreeViewToPlotEvent(self, index):
         item = index.model().itemFromIndex(index)
@@ -71,16 +69,6 @@ class PlotEvent(QWidget):
         self.ax.legend()
         self.canvas.draw()
 
-        #Update TableWidget
-        RowNum = len(array[:,0])
-        ColNum = len(array[0,:])
-        self.tableWidget.setRowCount(RowNum)
-        self.tableWidget.setColumnCount(ColNum)
-
-        for i in range(0,RowNum):
-            for j in range(0,ColNum):
-                self.tableWidget.setItem(i, j,QTableWidgetItem(str(array[i,j])))
-
     def TreeViewToEditEvent(self, index):
         item = index.model().itemFromIndex(index)
         array = item.data(item.UserRole)
@@ -88,8 +76,6 @@ class PlotEvent(QWidget):
         #Update TableWidget
         RowNum = len(array[:,0])
         ColNum = len(array[0,:])
-        #self.tableWidget.setRowCount(RowNum)
-        #self.tableWidget.setColumnCount(ColNum)
 
         PopUpTableWidget = MyTableWidget()
         PopUpTableWidget.setRowCount(RowNum)
@@ -120,98 +106,14 @@ class PlotEvent(QWidget):
             # Set the new edited values in the item
             item.setData(newarray,item.UserRole)
 
-
-
-
-class TableEvent(QWidget):
-  def UpdateTableWidget(self):
-        FileHandle = open(self.ImportFile_QLine.text(),'r',encoding='utf-8')
-        ReadLines = csv.reader(FileHandle)
-        self.TableData = []
-        for ReadLine in ReadLines:
-            if ReadLine[0] == 'X':
-                continue
-            self.TableData.append([float(ReadLine[0]),float(ReadLine[1])])    
-        self.TableData = np.array(self.TableData)
-        self.tableWidget.setRowCount(len(self.TableData))
-        self.tableWidget.setColumnCount(len(self.TableData[0]))
-
-        for n_row in range(0,len(self.TableData)):
-            for n_col in range(0,len(self.TableData[0])):
-                self.tableWidget.setItem(n_row,n_col,QTableWidgetItem(str(self.TableData[n_row,n_col])))
-    
-  def SaveTableWidget(self):
-        conditionA = self.ExportFile_Name != ''
-        conditionB = self.ExportFile_QLine.text() != ''
-        if conditionA and conditionB:
-            FileName = str(self.ExportFile_QLine.text()) + '/' + self.ExportFile_Name.text()
-            FileHandle = open(FileName,'w',encoding='utf-8',newline='')
-            CsvWriter = csv.writer(FileHandle)
-            for n_row in range(0,self.tableWidget.rowCount()):
-                rowdata = []
-                for n_col in range(0,self.tableWidget.columnCount()):
-                    rowdata.append(self.tableWidget.item(n_row,n_col).text())
-                CsvWriter.writerow(rowdata)
-            FileHandle.close()
-
 class ButtonEvent(QWidget):
     def ClearPlotButtonEvent(self):
         self.ax.clear()
         self.ax.grid()
         self.canvas.draw()
 
-    def UpdateTableButtonEvent(self):
-        if self.LastIndex == None:
-            return
-        item = self.LastIndex.model().itemFromIndex(self.LastIndex)
-        RowNum = self.tableWidget.rowCount();
-        ColNum = self.tableWidget.columnCount();
-        newarray = np.zeros([RowNum,ColNum])
-        for n_row in range(0,RowNum):
-            for n_col in range(0,ColNum):
-                newarray[n_row,n_col] = float(self.tableWidget.item(n_row,n_col).text())
-        item.setData(newarray,item.UserRole)
-        self.ax.plot(newarray[:,0],newarray[:,1], label = item.text())
-        self.ax.legend()
-        self.canvas.draw()
-     
-
 class MenuEvent(QWidget):
-  def FileOpenEvent(self):
-        fname = QFileDialog.getOpenFileName(self, 'Open file', './')
-        if fname[0] != '':
-            f = open(fname[0], 'r')
-            FileHandle = open(fname[0],'r',encoding='utf-8')
-            ReadLines = csv.reader(FileHandle)
-            self.TableData = []
-            for ReadLine in ReadLines:
-                if ReadLine[0] == 'X':
-                    continue
-                self.TableData.append([float(ReadLine[0]),float(ReadLine[1])])    
-            self.TableData = np.array(self.TableData)
-            self.tableWidget.setRowCount(len(self.TableData))
-            self.tableWidget.setColumnCount(len(self.TableData[0]))
+    pass
 
-            for n_row in range(0,len(self.TableData)):
-                for n_col in range(0,len(self.TableData[0])):
-                    self.tableWidget.setItem(n_row,n_col,QTableWidgetItem(str(self.TableData[n_row,n_col])))
-            f.close()
-            self.ax.clear()
-            self.UpdateTableData()
-            self.ax.plot(self.TableData[:,0],self.TableData[:,1])
-            self.ax.grid()
-            self.canvas.draw()
-
-  def showDialog2(self):
-        fname = QFileDialog.getExistingDirectory(self, 'Open file', './')
-        if fname != '':
-            self.ExportFile_QLine.setText(fname)
-
-class Subroutine(QWidget):
-    def UpdateTableData(self):
-        for n_row in range(0,self.tableWidget.rowCount()):
-            for n_col in range(0,self.tableWidget.columnCount()):
-                self.TableData[n_row,n_col] = float(self.tableWidget.item(n_row,n_col).text())
-
-class DefEvents(PlotEvent, TableEvent, MenuEvent, ButtonEvent, Subroutine, TreeViewEvent):
+class DefEvents(PlotEvent, MenuEvent, ButtonEvent, TreeViewEvent):
     pass

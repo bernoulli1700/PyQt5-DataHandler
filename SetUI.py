@@ -13,7 +13,6 @@ class SetUI(QWidget):
         self.ViewMenu = self.menuBar.addMenu("&View")
 
         File_OpenAction = QAction('Open',self)
-        File_OpenAction.triggered.connect(self.FileOpenEvent)
 
         self.fileMenu.addAction("New")
         self.fileMenu.addAction(File_OpenAction)
@@ -21,7 +20,7 @@ class SetUI(QWidget):
 
 
   def InitDirTreeView(self):
-        root_path = "C:/Users/LGRnD/Desktop/PythonProj/230207-PyQt5Proj"
+        root_path = "C:/Users/LGRnD/Desktop/PythonProj/PyQt5-DataHandler"
         self.model_file_system = QFileSystemModel()
         self.model_file_system.setRootPath(root_path)
         self.model_file_system.setReadOnly(False)
@@ -50,55 +49,46 @@ class SetUI(QWidget):
         self.ax = self.fig.add_subplot(111)
         self.ax.grid()        
 
-  def TableWidgetUI(self):
-        #Table Define & Initialize
-        self.tableWidget = QTableWidget()
-        self.tableWidget.setRowCount(20)
-        self.tableWidget.setColumnCount(2)
-        self.tableWidget.setEditTriggers(QAbstractItemView.AllEditTriggers)
-        self.tableWidget.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
-        for i in range(20):
-            for j in range(4):
-                self.tableWidget.setItem(i, j,QTableWidgetItem(str(0)))
-  
   def ButtonUI(self):
       self.ClearPlotButton = QPushButton('Clear Plot',self)
       self.ClearPlotButton.clicked.connect(self.ClearPlotButtonEvent)
       self.LastIndex = None
-      self.TableUpdateButton = QPushButton('Update',self)
-      self.TableUpdateButton.clicked.connect(self.UpdateTableButtonEvent)
-      
-      #TableUpdateButton.clicked.connect()
-
 
   def SetLayout(self):
         #Layout Setting
-        hbox1 = QHBoxLayout()
-        hbox1_vbox1 = QVBoxLayout()
-        hbox1_vbox1.addWidget(self.canvas)
-        hbox1_vbox1.addWidget(NavigationToolbar(self.canvas, self))
-        hbox_dummy = QHBoxLayout()
-        hbox_dummy.addWidget(self.ClearPlotButton)
-        hbox_dummy.addStretch()
-        hbox_dummy.addStretch()
-        hbox1_vbox1.addLayout(hbox_dummy)
 
-        hbox1_vbox2 = QVBoxLayout()
-        hbox1_vbox2.addWidget(self.tableWidget, stretch = 3)
-        hbox1_vbox2.addWidget(self.TableUpdateButton)
-        hbox1.addLayout(hbox1_vbox1, stretch = 3)
-        hbox1.addLayout(hbox1_vbox2, stretch = 1)
+        #PageLayout - vbox
+        #self.menubar / WorkingLayout - hbox
 
-        vbox_1 = QVBoxLayout()
-        vbox_1.addWidget(self.DirTreeView)
-        vbox_1.addWidget(self.DataTreeView)
+        #WorkingLayout - hbox
+        #WorkingLayout_Left - vbox / WorkingLayout_Right - vbox
+
+        #WorkingLayout_Left - vbox
+        #self.DirTreeView / self.DataTreeView
+
+        #WorkingLayout_Right - vbox
+        #self.canvas / NavigationToobar / ButtonToolBox - hbox
+
+        #BottonToolBox - hbox
+        #self.ClearPlotButton / Stretch / Stretch
+
+        WorkingLayout_Left = QVBoxLayout()
+        WorkingLayout_Left.addWidget(self.DirTreeView)
+        WorkingLayout_Left.addWidget(self.DataTreeView)
         
-        vbox_2 = QVBoxLayout()
-        vbox_2.addLayout(hbox1)
-
+        ButtonToolBox = QHBoxLayout()
+        ButtonToolBox.addWidget(self.ClearPlotButton)
+        ButtonToolBox.addStretch()
+        ButtonToolBox.addStretch()
+        
+        WorkingLayout_Right = QVBoxLayout()
+        WorkingLayout_Right.addWidget(self.canvas)
+        WorkingLayout_Right.addWidget(NavigationToolbar(self.canvas,self))
+        WorkingLayout_Right.addLayout(ButtonToolBox)
+     
         WorkingLayout = QHBoxLayout()
-        WorkingLayout.addLayout(vbox_1,stretch = 1)
-        WorkingLayout.addLayout(vbox_2,stretch = 3)
+        WorkingLayout.addLayout(WorkingLayout_Left,stretch = 1)
+        WorkingLayout.addLayout(WorkingLayout_Right,stretch = 3)
 
         PageLayout = QVBoxLayout()
         PageLayout.addWidget(self.menuBar)
