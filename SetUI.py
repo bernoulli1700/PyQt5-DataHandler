@@ -21,7 +21,8 @@ class SetUI(QWidget):
 
 
   def InitDirTreeView(self):
-        root_path = "C:/Users/LGRnD/Desktop/PythonProj/PyQt5-DataHandler"
+      
+        root_path = "C:/Users/USER1/Desktop/PythonProj/230301/PyQt5-DataHandler"
         self.model_file_system = QFileSystemModel()
         self.model_file_system.setRootPath(root_path)
         self.model_file_system.setReadOnly(False)
@@ -43,15 +44,20 @@ class SetUI(QWidget):
       self.DataTreeView.setContextMenuPolicy(Qt.CustomContextMenu)
       self.DataTreeView.customContextMenuRequested.connect(self.showContextMenu)
 
-  def Plot(self):
-        self.fig = plt.Figure()
-        self.canvas = FigureCanvas(self.fig)
-        self.ax = self.fig.add_subplot(111)
-        self.ax.grid()        
+  def InitTabArea(self):
+        
+        self.tabs = QTabWidget()
+        self.tabs.setTabsClosable(True)
+        self.tabs.tabCloseRequested.connect(self.close_tab)
+        self.tabs.tabBarDoubleClicked.connect(self.rename_tab)
 
+        self.add_tab()
+        
   def ButtonUI(self):
       self.ClearPlotButton = QPushButton('Clear Plot',self)
+      self.FittingToolButton = QPushButton('Fitting Tool',self)
       self.ClearPlotButton.clicked.connect(self.ClearPlotButtonEvent)
+      self.FittingToolButton.clicked.connect(self.FittingToolButtonEvent)
       self.LastIndex = None
 
   def SetLayout(self):
@@ -78,12 +84,12 @@ class SetUI(QWidget):
         
         ButtonToolBox = QHBoxLayout()
         ButtonToolBox.addWidget(self.ClearPlotButton)
+        ButtonToolBox.addWidget(self.FittingToolButton)
         ButtonToolBox.addStretch()
-        ButtonToolBox.addStretch()
-        
+
         WorkingLayout_Right = QVBoxLayout()
-        WorkingLayout_Right.addWidget(self.canvas)
-        WorkingLayout_Right.addWidget(NavigationToolbar(self.canvas,self))
+        #WorkingLayout_Right.addWidget(self.canvas)
+        WorkingLayout_Right.addWidget(self.tabs)
         WorkingLayout_Right.addLayout(ButtonToolBox)
      
         WorkingLayout = QHBoxLayout()
@@ -96,5 +102,5 @@ class SetUI(QWidget):
 
         self.setLayout(PageLayout)
         self.setWindowTitle('DataHandler')
-        self.setGeometry(300, 100, 1000, 800)
+        self.setGeometry(100, 100, 2000, 1000)
         self.show()

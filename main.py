@@ -8,7 +8,7 @@ class MyApp(SetUI,DefEvents):
       super().InitMenubar()
       super().InitDirTreeView()
       super().InitDataTreeView()
-      super().Plot()
+      super().InitTabArea()
       super().ButtonUI()
       super().SetLayout()
 
