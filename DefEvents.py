@@ -158,39 +158,84 @@ class ButtonEvent(QWidget):
         current_tab.canvas.draw()
 
     def FittingToolButtonEvent(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle('Curve Fitting Tool')
 
-        ImportCellDataSelectonTable = QTableWidget()
-        ImportCellDataSelectonTable.setRowCount(4)
-        ImportCellDataSelectonTable.setColumnCount(1)
-        ImportCycleDataSelectonTable = QTableWidget()
-        ImportCycleDataSelectonTable.setRowCount(4)
-        ImportCycleDataSelectonTable.setColumnCount(1)
+        ImportCellTable = QTableWidget(dialog)
+        ImportCellTable.setEditTriggers(QTableWidget.NoEditTriggers)
+        ImportCellTable.setColumnCount(1)
+        ImportCellTable.setHorizontalHeaderLabels(['Name'])
+        ImportCycleTable = QTableWidget(dialog)
+        ImportCycleTable.setEditTriggers(QTableWidget.NoEditTriggers)
+        ImportCycleTable.setColumnCount(1)
+        ImportCycleTable.setHorizontalHeaderLabels(['Name'])
 
-        ExportCellDataSelectonTable = QTableWidget()
-        ExportCellDataSelectonTable.setRowCount(4)
-        ExportCellDataSelectonTable.setColumnCount(1)
-        ExportCycleDataSelectonTable = QTableWidget()
-        ExportCycleDataSelectonTable.setRowCount(4)
-        ExportCycleDataSelectonTable.setColumnCount(1)
+        ExportCellTable = QTableWidget(dialog)
+        ExportCellTable.setEditTriggers(QTableWidget.NoEditTriggers)
+        ExportCellTable.setColumnCount(1)
+        ExportCellTable.setHorizontalHeaderLabels(['Name'])
+        ExportCycleTable = QTableWidget(dialog)
+        ExportCycleTable.setEditTriggers(QTableWidget.NoEditTriggers)
+        ExportCycleTable.setColumnCount(1)
+        ExportCycleTable.setHorizontalHeaderLabels(['Name'])
 
         #SettingPanelBox - hbox
-        #ImportCellDataSelectionBox - vbox / ImportCycleDataSelectionBox - vbox / 
+        #ImportCellBox - vbox / ImportCycleBox - vbox / 
         SettingPanelBox = QHBoxLayout()
-        ImportCellDataSelectionBox = QVBoxLayout()
-        ImportCycleDataSelectionBox = QVBoxLayout()
-        ExportCellDataSelectionBox = QVBoxLayout()
-        ExportCycleDataSelectionBox = QVBoxLayout()
+        ImportCellBox = QVBoxLayout()
+        ImportCycleBox = QVBoxLayout()
+        ExportCellBox = QVBoxLayout()
+        ExportCycleBox = QVBoxLayout()
 
-        ImportCellDataSelectionBox.addWidget(ImportCellDataSelectonTable)
-        ImportCycleDataSelectionBox.addWidget(ImportCycleDataSelectonTable)
-        ExportCellDataSelectionBox.addWidget(ExportCellDataSelectonTable)
-        ExportCycleDataSelectionBox.addWidget(ExportCycleDataSelectonTable)
+        for row in range(self.DataTreeModel.rowCount()):
+            ImportCellDataItem = self.DataTreeModel.item(row)
+            ImportCellTable.insertRow(row)
+            ImportCellNameItem = QTableWidgetItem(ImportCellDataItem.text())
+            ImportCellTable.setItem(row,0,ImportCellNameItem)
+        
+        for row in range(self.DataTreeModel.rowCount()):
+            ExportCellDataItem = self.DataTreeModel.item(row)
+            ExportCellTable.insertRow(row)
+            ExportCellNameItem = QTableWidgetItem(ExportCellDataItem.text())
+            ExportCellTable.setItem(row,0,ExportCellNameItem)
+        
+        def UpdateImportCycleTable(current):
+            selected_index = current.row()
+            selected_cell_data_item = self.DataTreeModel.item(selected_index)
+            ImportCycleTable.setRowCount(0)
+            for row in range(selected_cell_data_item.rowCount()):
+                cycle_array_item = selected_cell_data_item.child(row)
+                ImportCycleTable.insertRow(row)
+                subitem_name_item = QTableWidgetItem(cycle_array_item.text())
+                ImportCycleTable.setItem(row, 0, subitem_name_item)
+                
+        def UpdateExportCycleTable(current):
+            selected_index = current.row()
+            selected_cell_data_item = self.DataTreeModel.item(selected_index)
+            ExportCycleTable.setRowCount(0)
+            for row in range(selected_cell_data_item.rowCount()):
+                cycle_array_item = selected_cell_data_item.child(row)
+                ExportCycleTable.insertRow(row)
+                subitem_name_item = QTableWidgetItem(cycle_array_item.text())
+                ExportCycleTable.setItem(row, 0, subitem_name_item)
+
+        ImportCellTable.selectionModel().currentRowChanged.connect(UpdateImportCycleTable)
+        ExportCellTable.selectionModel().currentRowChanged.connect(UpdateExportCycleTable)
+
+        ImportCellBox.addWidget(QLabel('Import Cell',self))
+        ImportCellBox.addWidget(ImportCellTable)
+        ImportCycleBox.addWidget(QLabel('Import Cycle',self))
+        ImportCycleBox.addWidget(ImportCycleTable)
+        ExportCellBox.addWidget(QLabel('Export Cell',self))
+        ExportCellBox.addWidget(ExportCellTable)
+        ExportCycleBox.addWidget(QLabel('Export Cycle',self))
+        ExportCycleBox.addWidget(ExportCycleTable)
 
         #SettingPanelBox - hbox
-        SettingPanelBox.addLayout(ImportCellDataSelectionBox, stretch=1)
-        SettingPanelBox.addLayout(ImportCycleDataSelectionBox, stretch=1)
-        SettingPanelBox.addLayout(ExportCellDataSelectionBox, stretch=1)
-        SettingPanelBox.addLayout(ExportCycleDataSelectionBox, stretch=1)
+        SettingPanelBox.addLayout(ImportCellBox, stretch=1)
+        SettingPanelBox.addLayout(ImportCycleBox, stretch=1)
+        SettingPanelBox.addLayout(ExportCellBox, stretch=1)
+        SettingPanelBox.addLayout(ExportCycleBox, stretch=1)
 
         #ControlPanelBox - hbox
         #FittingCurveSwitchBox - vbox / FittingParameterBox - vbox
@@ -210,13 +255,10 @@ class ButtonEvent(QWidget):
         PageLayout.addLayout(ControlPanelBox, stretch=1)
 
 
-        dialog = QDialog(self)
-        dialog.setWindowTitle('Curve Fitting Tool')
         dialog.setLayout(PageLayout)
         dialog.setModal(True)
         dialog.setGeometry(200,200,1200,600)
-        dialog.show()
-
+        dialog.exec_()
 
 class MenuEvent(QWidget):
     pass
