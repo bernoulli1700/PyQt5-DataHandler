@@ -56,8 +56,8 @@ class SetUI(QWidget):
   def ButtonUI(self):
       self.ClearPlotButton = QPushButton('Clear Plot',self)
       self.FittingToolButton = QPushButton('Fitting Tool',self)
-      self.ClearPlotButton.clicked.connect(self.ClearPlotButtonEvent)
-      self.FittingToolButton.clicked.connect(self.FittingToolButtonEvent)
+      self.ClearPlotButton.clicked.connect(self.ClearPlotEvent)
+      self.FittingToolButton.clicked.connect(self.FittingToolEvent_Rev1)
       self.LastIndex = None
 
   def SetLayout(self):
