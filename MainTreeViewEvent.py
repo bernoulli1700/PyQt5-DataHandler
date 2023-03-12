@@ -19,36 +19,47 @@ class MainTreeViewEvent(QWidget):
             depth += 1
 
         menu = QMenu(self.DataTreeView)
-        
+        item = self.DataTreeModel.itemFromIndex(index)
         # Add actions to the menu based on the depth of the item
-        if depth == 0:
-            create_action = QAction('Create New Cell Data', self)
-            create_action.triggered.connect(self.CreateNewCellDataEvent)
-            menu.addAction(create_action)
-        elif depth == 1:
-            item = index.model().itemFromIndex(index)
-            Create_action = QAction('Create New Cycle Array', self)
-            delete_action = QAction('Delete', self)
-            delete_action.triggered.connect(lambda: self.DeleteDataEvent(item))
-            Create_action.triggered.connect(lambda: self.CreateNewCycleEvent(item))
-            menu.addAction(Create_action)   
-            menu.addAction(delete_action)
+        if depth == 1:
+            if isinstance(item, CellData):
+                create_action = QAction('Create New Cell Data', self)
+                create_action.triggered.connect(self.CreateNewCellDataEvent)
+                menu.addAction(create_action)
+            if isinstance(item, FitCurveData):
+                create_action = QAction('Create New Fit Curve Data', self)
+                create_action.triggered.connect(self.CreateNewFitCurveDataEvent)
+                menu.addAction(create_action)
         elif depth == 2:
-            item = index.model().itemFromIndex(index)
-            Delete_action = QAction('Delete', self)
-            Plot_action = QAction('Plot', self)
-            Edit_action = QAction('Edit', self)
-            Plot_action.triggered.connect(lambda: self.TreeViewPlotEvent(item))
-            Delete_action.triggered.connect(lambda: self.DeleteDataEvent(item))
-            Edit_action.triggered.connect(lambda: self.CycleEditEvent(item))
-            menu.addAction(Delete_action)   
-            menu.addAction(Plot_action)   
-            menu.addAction(Edit_action)   
+            if isinstance(item, CellData):
+                item = index.model().itemFromIndex(index)
+                Create_action = QAction('Create New Cycle Array', self)
+                delete_action = QAction('Delete', self)
+                delete_action.triggered.connect(lambda: self.DeleteDataEvent(item))
+                Create_action.triggered.connect(lambda: self.CreateNewCycleEvent(item))
+                menu.addAction(Create_action)   
+                menu.addAction(delete_action)
+        elif depth == 3:
+            if isinstance(item, CycleArray):
+                item = index.model().itemFromIndex(index)
+                Delete_action = QAction('Delete', self)
+                Plot_action = QAction('Plot', self)
+                Edit_action = QAction('Edit', self)
+                Plot_action.triggered.connect(lambda: self.TreeViewPlotEvent(item))
+                Delete_action.triggered.connect(lambda: self.DeleteDataEvent(item))
+                Edit_action.triggered.connect(lambda: self.CycleEditEvent(item))
+                menu.addAction(Delete_action)   
+                menu.addAction(Plot_action)   
+                menu.addAction(Edit_action)   
 
         menu.exec_(self.DataTreeView.viewport().mapToGlobal(pos))
     
     def CreateNewCellDataEvent(self):
-        self.DataTreeModel.appendRow(CellData())
+        self.CellDataTree.appendRow(CellData())
+        self.DataTreeView.setModel(self.DataTreeModel)
+
+    def CreateNewFitCurveDataEvent(self):
+        self.FitCurveDataTree.appendRow(FitCurveData())
         self.DataTreeView.setModel(self.DataTreeModel)
 
     def CreateNewCycleEvent(self, item):

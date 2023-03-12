@@ -33,10 +33,15 @@ class SetUI(QWidget):
         self.DirTreeView.setDragEnabled(True)
   
   def InitDataTreeView(self):
+      self.CellDataTree = QStandardItem('Cell Data')
+      self.FitCurveTree = QStandardItem('Fit Curve')
       self.DataTreeModel = QStandardItemModel()
-      self.DataTreeModel.appendRow(CellData())
-      self.DataTreeModel.setHeaderData(0,Qt.Horizontal,"Cell Name")
-      self.DataTreeModel.setHeaderData(1,Qt.Horizontal,"Data Tree")
+      self.DataTreeModel.appendRow(self.CellDataTree)
+      self.DataTreeModel.appendRow(self.FitCurveTree)
+
+
+      self.CellDataTree.appendRow(CellData())
+      self.FitCurveTree.appendRow(FitCurveData())
 
       self.DataTreeView = QTreeView()
       self.DataTreeView.setModel(self.DataTreeModel)

@@ -4,6 +4,7 @@ from CustomWidgets import *
 class MainPlotEvent(QWidget):
     def TreeViewPlotEvent(self, item):
         array = item.data(item.UserRole)
+        self.CurrentItem = item
         current_tab = self.tabs.currentWidget()
         current_tab.ax.plot(array[:,0],array[:,1], label = item.text())
         current_tab.ax.legend()

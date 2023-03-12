@@ -4,6 +4,28 @@ class FittingToolClass(QWidget):
     def FittingToolEvent_Rev1(self):
         dialog = QDialog(self)
         dialog.setWindowTitle('Curve Fitting Tool')
+        
+        PageLayout = QHBoxLayout()
+        RadioBoxButton = QVBoxLayout()
+        groupbox = QGroupBox('Fit Curve Select')
+
+        LinearCheck = QRadioButton('Linear')
+        IrrationalCheck = QRadioButton('Irrational')
+        RadioBoxButton.addWidget(LinearCheck)
+        RadioBoxButton.addWidget(IrrationalCheck)
+        RadioBoxButton.addStretch()
+        RadioBoxButton.addStretch()
+        groupbox.setLayout(RadioBoxButton)
+
+        PageLayout.addWidget(groupbox)
+
+        dialog.setLayout(PageLayout)
+        dialog.setModal(True)
+        dialog.setGeometry(200,200,1200,300)
+        dialog.exec_()
+
+
+        
 
     def FittingToolEvent_Rev0(self):
         dialog = QDialog(self)

@@ -29,3 +29,25 @@ class CellData(QStandardItem):
         self.setEditable(True)
         self.appendRow(CycleArray())
     
+class FitCurveData(QStandardItem):
+    UserRole_1 = Qt.UserRole + 1
+    UserRole_2 = Qt.UserRole + 2
+    
+    def __init__(self):
+        super().__init__()
+        super().setText('EmptyFitCurve')
+        self.setEditable(True)
+        self.FitTypeIndex = 1
+        self.FitDataPts = np.zeros((10,2))
+
+    def data(self, role):
+        if role == self.UserRole_1:
+            return super().data(self.UserRole_1)
+        elif role == self.UserRole_2:
+            return super().data(self.UserRole_2)    
+        else :
+            return super().data(role)
+
+
+
+
